@@ -7,7 +7,7 @@
 load data/TCGA_BRCA_expression_estrogen.mat
 %% 
 % TCGA-COAD data
-load data/TCGA_COAD_expression_stage.mat
+% load data/TCGA_COAD_expression_stage.mat
 
 %%  GLMNAT_LOGISTIC default
 %
