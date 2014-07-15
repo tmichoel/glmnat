@@ -7,7 +7,7 @@ function score = glmnat_logisticscore(X,Y,fit)
 % USAGE: score = glmnat_logisticscore(X,Y,alpha,beta,lambda);
 %
 % INPUT: X   - NxP matrix of predictor data (N samples, P predictors).
-%        Y   - Nx1 vector of response data.
+%        Y   - Nx1 vector of 0/1 response data.
 %        fit - structure with fields
 %              fit.a0     - 1xK vector of intercept parameters.
 %              fit.beta   - PxK matrix of regression coefficients
