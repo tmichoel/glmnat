@@ -1,10 +1,7 @@
 %% GLMNAT_LOGISTIC usage examples
 %
-%% Load test data
+%% Load test data, choose one
 % 
-%%
-% Leukemia data
-load data/Leukemia.mat
 %% 
 % TCGA-BRCA data
 load data/TCGA_BRCA_expression_estrogen.mat
@@ -46,8 +43,11 @@ fitnat = glmnat_logistic(X,Y,lambda);
 %% Compare results to GLMNET
 %
 %%
-% Run glmnet with default settings
-fitnet = glmnet(X,Y,'binomial',opts);
+% Run glmnet with same settings
+X1 = zscore(X,1); % standardize X
+opts.alpha = 1;
+opts.lambda = fitnat.lambda;
+fitnet = glmnet(X1,Y,'binomial',opts);
 %%
 % Compute logistic regression cost function values and compare
 score_nat = glmnat_logisticscore(X,Y,fitnat);
