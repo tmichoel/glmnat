@@ -12,7 +12,7 @@ function fit = glmnat_logistic(varargin)
 %        [alpha,beta,lambda] = glmnat_logistic(X,Y,lambda,epsconv);
 %
 % INPUT: X       - NxP matrix of predictor data (N samples, P predictors).
-%        Y       - Nx1 vector of response data.
+%        Y       - Nx1 vector of 0/1 response data.
 %        lambda  - Sequence of regularization parameters, sort from
 %                  high to low for fastest results. Optional parameter, default
 %                  is to use a geometric series of length 100.
@@ -40,6 +40,14 @@ Y = varargin{2}; % response data
 % sanity checks on the data
 if numel(Y)~=length(Y)
     error('Response data Y is not a vector.')
+end
+if length(unique(Y))~=2
+    error('Response data is not binary.')
+end
+if sum(unique(Y)==[0;1])~=2
+    [~,~,Y] = unique(Y);
+    Y = Y-1;
+    warning('Response data classes have been converted to 0/1 values.') 
 end
 if size(X,1)~=size(Y,1)
     error('Number of samples in predictor X and response Y are not identical.')
