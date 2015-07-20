@@ -7,9 +7,9 @@ function fit = glmnat_logistic(varargin)
 %   GLMNAT_LOGISTIC_SRC.C which needs to be compiled first. Compilation
 %   instructions are provided in the header of this C-file.
 % 
-% USAGE: [alpha,beta,lambda] = glmnat_logistic(X,Y);
-%        [alpha,beta,lambda] = glmnat_logistic(X,Y,lambda);
-%        [alpha,beta,lambda] = glmnat_logistic(X,Y,lambda,epsconv);
+% USAGE: fit = glmnat_logistic(X,Y);
+%        fit = glmnat_logistic(X,Y,lambda);
+%        fit = glmnat_logistic(X,Y,lambda,epsconv);
 %
 % INPUT: X       - NxP matrix of predictor data (N samples, P predictors).
 %        Y       - Nx1 vector of 0/1 response data.
