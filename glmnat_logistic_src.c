@@ -30,13 +30,38 @@ static inline int sgn(double val) {
 }
 
 /*
- * Update natural parameter of the GLM + some functions of it
+ * Update natural parameter of the GLM + some functions of it:
+ *     \eta_i = x_i^T \hat\beta
+ *     f_1(\eta_i) = \frac{1}{n(1+e^{-\eta_i})}
+ *     f_2(\eta_i) = \frac{e^{-\eta_i}}{n(1+e^{-\eta_i})}
  */
 void updateGLM (double *eta, double *etaFunc1, double *etaFunc2, double *X, 
         double bdiff, int j, int n){
     double val, expval1, expval2;
     for (int i=0; i<n; i++){
          val = eta[i] + bdiff*X[i+n*j];
+         expval1 = exp(-val);
+         expval2 = 1 / (n*(1+expval1));
+         eta[i] = val;
+         etaFunc1[i] = expval2;
+         etaFunc2[i] = expval1*expval2;
+    }
+}
+
+/*
+ * Calculate natural parameter of the GLM + some functions:
+ *     \eta_i = x_i^T \hat\beta
+ *     f_1(\eta_i) = \frac{1}{n(1+e^{-\eta_i})}
+ *     f_2(\eta_i) = \frac{e^{-\eta_i}}{n(1+e^{-\eta_i})}
+ */
+void calculateGLM (double *eta, double *etaFunc1, double *etaFunc2, double *X, 
+        double *beta, int n, int p){
+    double val, expval1, expval2;
+    for (int i=0; i<n; i++){
+         val = 0.0;
+         for (int j=0; j<p; j++){
+             val += beta[j]*X[i+n*j];
+         }
          expval1 = exp(-val);
          expval2 = 1 / (n*(1+expval1));
          eta[i] = val;
@@ -231,9 +256,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
             museq[0], n, p, normdiff);
     
     for (int k=0; k<m; k++){
+        // first run complete cycle to initialize with next mu[k]
+//         if (k>0){
+//             activeSet = cycleComplete (w0, X, activeSet, eta, etaFunc1, etaFunc2,
+//                     w, beta, museq[k], n, p, normdiff);
+//         }
         iter = 0;
         do {
             iter++;
+           // calculateGLM(eta, etaFunc1, etaFunc2, X, beta, n, p);
             iterAct = 0;
             do {
                 iterAct++;
@@ -248,6 +279,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
                     w, beta, museq[k], n, p, normdiff);
             
         } while (*normdiff>tol && iter < max_iter);
+        printf("%f\t%d\n",museq[k],iter);
         if (iter>=max_iter){
             printf("Warning :: did not converge for mu=%f\n", museq[k]);
         }
